@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:WindowedApplication xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					   xmlns:s="library://ns.adobe.com/flex/spark" 
+					   xmlns:mx="library://ns.adobe.com/flex/mx" creationComplete="windowedapplication1_creationCompleteHandler(event)">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import HelperClasses.Lookup;
+			import HelperClasses.WebIntegration;
+			import HelperClasses.xmlManager;
+			
+			import flash.data.*;
+			import flash.data.SQLConnection;
+			import flash.data.SQLStatement;
+			import flash.filesystem.File;
+			
+			import mx.collections.ArrayList;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.utils.ObjectUtil;
+			
+			import valueObjects.FuelObject;
+			
+			private var dbFile:File = File.applicationStorageDirectory.resolvePath("testDB");
+			
+			
+			private var sqlConn:SQLConnection = new SQLConnection();
+			
+			private var sqlStatement:SQLStatement = new SQLStatement();
+			
+			[Bindable]
+			private var resultA:Array = new Array;
+			[Bindable]
+			private var gridData:ArrayList = new ArrayList;
+			
+			//create a new instance of the lookup class
+			private var lookUp:Lookup = new Lookup();
+			
+			private var XmlMan:xmlManager = new xmlManager();
+				
+			//This is the page load event
+			protected function windowedapplication1_creationCompleteHandler(event:FlexEvent):void
+			{
+				
+				//var selectedFile:Event;
+				//var file:File = new File;
+				//file.browseForOpen("Please select a database");
+				
+				
+				
+				//we open the connection by loading the file in
+				sqlConn.open(dbFile);
+				//this is the database commands
+				sqlStatement.sqlConnection = sqlConn;
+				//run the get costs sub
+				getCosts()
+				
+				
+			}
+			
+			//This sub gets all the fuels and prices from the database
+			protected function getCosts():void
+			{
+				sqlStatement.text="SELECT * FROM Costs";
+				sqlStatement.execute();
+				//write the resuts to the resultsA array.
+				//the datagrid is bound to this.
+				resultA = sqlStatement.getResult().data;
+				
+				
+				
+				gridData = lookUp.GetFuelArray(resultA);
+			}
+			
+			//This sub updates the selected fuel with the new price
+			protected function updatePrice():void
+			{
+				if (dg.selectedIndex !=-1)
+				{
+					//create the update sql
+				//dg.selectedItem.FuelID - 
+				//dg is the name of the datagrid
+				//FuelID is the name of the column which we want
+				sqlStatement.text="UPDATE Costs SET Price = " + priceText.text + " WHERE FuelID = " + lookUp.GetFuelID(dg.selectedItem.Fuel);
+				sqlStatement.execute();
+				//get the latest prices
+				getCosts();
+				}
+				else
+				{
+					Alert.show("Please select a fuel");
+				}
+				
+			}
+			
+			protected function CreateXML():void
+			{
+				//XmlMan.GenerateNewXML();
+			}
+			
+			protected function CreateNewXML():void
+			{
+				var xmlDoc:XML = <NES></NES>; 
+				
+				var xmlNode:XML= new XML;
+				//XmlMan.CreateNesRoot(xmlDoc);
+				
+				xmlNode = XmlMan.CreateTable(xmlDoc,"Fuel");
+				
+				XmlMan.CreateNode(xmlNode,"FuelID","1");
+				
+				XmlMan.WriteFile(xmlDoc);
+				CallXML(xmlDoc);
+				
+				
+				priceText.text =  xmlDoc.Fuel.FuelID;
+			}
+			
+			protected function CallXML(xmlDoc:XML):void
+			{
+				
+				var xml:WebIntegration = new WebIntegration;
+				xml.CallXMLService(xmlDoc);
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+//				var xml:WebIntegration = new WebIntegration;
+//				xml.DoSomething();
+				
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:DataGrid id="dg" dataProvider="{gridData}" width="300" right="10" left="10" top="40"/>
+
+	
+	<s:TextInput id="priceText" x="91" y="282" width="87"/>
+	<s:Label x="35" y="292" text="Price"/>
+	<s:Button x="186" y="283" label="Change" enabled="{dg.selectedIndex !=-1}" click="updatePrice()"/>
+	<s:Button x="283" y="283" label="XML" click="CreateXML()"/>
+	<s:Button x="377" y="283" label="Button" click="CreateNewXML()"/>
+	<s:Button x="479" y="283" label="Button" click="button1_clickHandler(event)"/>
+	
+</s:WindowedApplication>

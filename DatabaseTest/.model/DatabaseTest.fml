@@ -1,0 +1,101 @@
+
+<model xmlns="http://ns.adobe.com/Fiber/1.0">
+  <annotation name="ActionScriptGeneration">
+    <item name="FullyQualifyReferences">true</item>
+  </annotation>
+  <entity name="HelloWorldResponse">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">HelloWorldResponse</item>
+    </annotation>
+    <annotation name="service Group"/>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+  </entity>
+  <entity name="CalculateXML">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">CalculateXML</item>
+    </annotation>
+    <annotation name="service Group"/>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+  </entity>
+  <entity name="HelloWorld">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">HelloWorld</item>
+    </annotation>
+    <annotation name="service Group"/>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+  </entity>
+  <service name="Service1">
+    <annotation name="ActionScriptGeneration">
+      <item name="WSDL-service">Service1</item>
+      <item name="ServiceType">WebService</item>
+      <item name="WSDL">http://www.nilanperera.co.uk/service1.asmx?wsdl</item>
+      <item name="Package">services.service1</item>
+      <item name="WSDL-port">Service1Soap</item>
+    </annotation>
+    <annotation name="ServiceTypeGroup">
+      <item name="ServiceBackendType">WebService</item>
+    </annotation>
+    <annotation name="ServiceConfig">
+      <item name="DEFAULT_ENTITY_PACKAGE">valueObjects</item>
+      <item name="WSDL-endpoint">http://www.nilanperera.co.uk/service1.asmx</item>
+      <item name="LINKED_FILE"></item>
+    </annotation>
+    <function name="CalculateXML" return-type="CalculateXMLResponse">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="WSDLName">
+        <item name="SOAPAction">http://tempuri.org/CalculateXML</item>
+        <item name="CalculateXML">http://tempuri.org/,CalculateXML</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="inputParams">opaque</item>
+        <item name="returnType">CalculateXMLResponse</item>
+      </annotation>
+      <parameter name="inXML" type="opaque"/>
+    </function>
+    <function name="HelloWorld" return-type="string">
+      <annotation name="analyze group">
+        <item name="analyzed">true</item>
+      </annotation>
+      <annotation name="WSDLName">
+        <item name="SOAPAction">http://tempuri.org/HelloWorld</item>
+        <item name="HelloWorld">http://tempuri.org/,HelloWorld</item>
+      </annotation>
+      <annotation name="original signature">
+        <item name="returnType">string</item>
+      </annotation>
+    </function>
+  </service>
+  <entity name="CalculateXMLResponse">
+    <annotation name="EntityProperties">
+      <item name="EntityOriginalName">CalculateXMLResponse</item>
+    </annotation>
+    <annotation name="service Group">
+      <item name="service">Service1</item>
+    </annotation>
+    <annotation name="ServerProperties">
+      <item name="IncludeRemoteClass">nonempty</item>
+    </annotation>
+    <annotation name="ActionScriptGeneration">
+      <item name="Package">valueObjects</item>
+    </annotation>
+    <property name="CalculateXMLResult" type="boolean"/>
+    <property name="inXML" type="opaque"/>
+  </entity>
+</model>
